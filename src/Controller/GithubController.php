@@ -31,7 +31,9 @@ class GithubController extends AbstractController
         $response = $client->request('GET', $this->getParameter('GITHUB_REPOS_BASE_URL') . $this->getQueryParametersString($queryParameters));
         $content = $response->toArray();
 
-        return $this->json($content);
+        return $this->render('github/list_repos.html.twig', [
+            'repos' => $content['items']
+        ]);
     }
 
     protected function getQueryParameters(Request $request)
