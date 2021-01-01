@@ -49,14 +49,11 @@ class GithubController extends AbstractController
     protected function validateQueryParameters($queryParameters)
     {
         $createdAt = $queryParameters['created_at'];
-        $createdAtArr = explode('-', $createdAt);
-        if (!(count($createdAtArr) == 3)) {
+        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $createdAt)) {
+            return true;
+        } else {
             return false;
         }
-        if (!checkdate($createdAtArr[1], $createdAtArr[2], $createdAtArr[0])) {
-            return false;
-        }
-        return true;
     }
 
     protected function getQueryParametersString($queryParameters)
@@ -65,6 +62,7 @@ class GithubController extends AbstractController
         $queryParametersString .= "+language:" . $queryParameters["language"];
         unset($queryParameters['created_at']);
         unset($queryParameters['language']);
+
         foreach ($queryParameters as $key => $value) {
             $queryParametersString .= "&$key=$value";
         }
