@@ -50,7 +50,7 @@ class GithubController extends AbstractController
     {
         $createdAt = $queryParameters['created_at'];
         $createdAtArr = explode('-', $createdAt);
-        if (!count($createdAtArr) == 3) {
+        if (!(count($createdAtArr) == 3)) {
             return false;
         }
         if (!checkdate($createdAtArr[1], $createdAtArr[2], $createdAtArr[0])) {
