@@ -2,7 +2,7 @@
 
 {% block body %}
     <form action="{{ path('api_github_repos') }}" method="get">
-        <label>Created : </label><input name="created_at" type="text" placeholder="10"
+        <label>Created : </label><input name="created_at" type="text" placeholder="2019-01-10"
                                         value="{{ app.request.query.get('created_at') }}"/>
         <label>Limit: </label><input name="per_page" type="text" placeholder="10"
                                      value="{{ app.request.query.get('per_page') }}"/>
