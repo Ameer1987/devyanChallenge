@@ -2,11 +2,16 @@
 
 {% block body %}
     <form action="{{ path('api_github_repos') }}" method="get">
-        <label>Created : </label><input type="text" placeholder="10"/>
-        <label>Limit: </label><input type="text" placeholder="10"/>
-        <label>Sort: </label><input type="text" placeholder="stars"/>
-        <label>Order: </label><input type="text" placeholder="desc"/>
-        <label>Language: </label><input type="text" placeholder="javascript"/>
+        <label>Created : </label><input name="created_at" type="text" placeholder="10"
+                                        value="{{ app.request.query.get('created_at') }}"/>
+        <label>Limit: </label><input name="per_page" type="text" placeholder="10"
+                                     value="{{ app.request.query.get('per_page') }}"/>
+        <label>Sort: </label><input name="sort" type="text" placeholder="stars"
+                                    value="{{ app.request.query.get('sort') }}"/>
+        <label>Order: </label><input name="order" type="text" placeholder="desc"
+                                     value="{{ app.request.query.get('order') }}"/>
+        <label>Language: </label><input name="language" type="text" placeholder="javascript"
+                                        value="{{ app.request.query.get('language') }}"/>
 
         <br/><br/>
         <button type="submit">Search</button>
@@ -19,6 +24,7 @@
             <tr>
                 <td>{{ repo.name }}</td>
                 <td>{{ repo.created_at }}</td>
+                <td>{{ repo.stargazers_count }}</td>
                 <td>{{ repo.language }}</td>
             </tr>
         {% endfor %}

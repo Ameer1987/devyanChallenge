@@ -2,7 +2,6 @@
 // src/Controller/LuckyController.php
 namespace App\Controller;
 
-use http\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,11 +38,11 @@ class GithubController extends AbstractController
     protected function getQueryParameters(Request $request)
     {
         return [
-            'created_at' => $request->get('created_at') ?? '2019-01-10',
-            'sort' => $request->get('sort') ?? 'stars',
-            'order' => $request->get('order') ?? 'desc',
-            'per_page' => $request->get('per_page') ?? '10',
-            'language' => $request->get('language') ?? 'javascript',
+            'created_at' => $request->get('created_at') ?: '2019-01-10',
+            'sort' => $request->get('sort') ?: 'stars',
+            'order' => $request->get('order') ?: 'desc',
+            'per_page' => $request->get('per_page') ?: '10',
+            'language' => $request->get('language') ?: 'javascript',
         ];
     }
 
@@ -63,7 +62,9 @@ class GithubController extends AbstractController
     protected function getQueryParametersString($queryParameters)
     {
         $queryParametersString = "?q=created:%3E" . $queryParameters["created_at"];
+        $queryParametersString .= "+language:" . $queryParameters["language"];
         unset($queryParameters['created_at']);
+        unset($queryParameters['language']);
         foreach ($queryParameters as $key => $value) {
             $queryParametersString .= "&$key=$value";
         }
