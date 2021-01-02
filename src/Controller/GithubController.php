@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * @Route("/api/github",name="api_github_")
+ * @Route("/github",name="github_")
  */
 class GithubController extends AbstractController
 {
@@ -23,12 +23,14 @@ class GithubController extends AbstractController
     public function listRepos(Request $request, HttpClientInterface $client): Response
     {
         $queryParameters = $this->getQueryParameters($request);
-        if (!$this->validateQueryParameters($queryParameters)) {
-            return $this->json(['Not valid search parameters.']);
-        }
+        $this->validateQueryParameters($queryParameters);
 
-        $response = $client->request('GET', $this->getParameter('GITHUB_REPOS_BASE_URL') . $this->getQueryParametersString($queryParameters));
-        $content = $response->toArray();
+        try {
+            $response = $client->request('GET', $this->getParameter('GITHUB_REPOS_BASE_URL') . $this->getQueryParametersString($queryParameters));
+            $content = $response->toArray();
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
 
         return $this->render('github/list_repos.html.twig', [
             'repos' => $content['items']
@@ -46,12 +48,12 @@ class GithubController extends AbstractController
         ];
     }
 
-    protected function validateQueryParameters($queryParameters)
+    protected function validateQueryParameters(&$queryParameters)
     {
         $createdAt = $queryParameters['created_at'];
-        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $createdAt)) {
-            return true;
-        } else {
+        if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $createdAt)) {
+            $queryParameters['created_at'] = '2019-01-10';
+            $this->addFlash('error', 'Not valid date in created at (Y-m-d).');
             return false;
         }
     }

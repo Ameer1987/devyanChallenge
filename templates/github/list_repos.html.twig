@@ -1,9 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form action="{{ path('api_github_repos') }}" method="get">
+    {# read and display all flash messages #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <br/>
+
+    <form action="{{ path('github_repos') }}" method="get">
         <label>Created At: </label><input name="created_at" type="text" placeholder="2019-01-10"
-                                        value="{{ app.request.query.get('created_at') }}"/>
+                                          value="{{ app.request.query.get('created_at') }}"/>
         <label>Limit: </label><input name="per_page" type="text" placeholder="10"
                                      value="{{ app.request.query.get('per_page') }}"/>
         <label>Sort: </label><input name="sort" type="text" placeholder="stars"
